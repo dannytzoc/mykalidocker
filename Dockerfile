@@ -28,7 +28,6 @@ RUN apt-get update && apt-get install -y \
     steghide \
     foremost \
     file \
-    strings \
     ltrace \
     strace \
     gdb \
