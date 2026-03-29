@@ -14,5 +14,5 @@ The reason for this is so you can access the web applications
 
 To start docker contatiner run this command you can probably alias is to make it easier
 ```
-docker run --cap-add=NET_ADMIN --device=/dev/net/tun --sysctl net.ipv6.conf.all.disable_ipv6=0 -it imgid bash
+docker run --cap-add=NET_ADMIN --device=/dev/net/tun --sysctl net.ipv6.conf.all.disable_ipv6=0 -it --rm -v $(pwd):/workspace IMAGEID
 ```
