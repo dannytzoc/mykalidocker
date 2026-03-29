@@ -1,50 +1,32 @@
+# 2026 Modern Kali CTF Dockerfile
+# -----------------------------
 FROM kalilinux/kali-rolling:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    git \
-    curl \
-    wget \
-    unzip \
-    tmux \
-    zsh \
-    nano \
-    vim \
-    netcat-openbsd \
-    socat \
-    nmap \
-    ffuf \
-    gobuster \
-    dirsearch \
-    sqlmap \
-    hashcat \
-    hashid \
-    john \
-    binwalk \
-    exiftool \
-    steghide \
-    foremost \
-    file \
-    ltrace \
-    strace \
-    gdb \
-    radare2 \
-    ghidra \
-    && apt-get 
-
-# Python tooling (modern CTF stack)
-RUN pip3 install --no-cache-dir \
-    pwntools \
-    requests \
-    beautifulsoup4 \
-    pycryptodome \
-    z3-solver
-
-# Rockyou
-RUN gzip -d /usr/share/wordlists/rockyou.txt.gz || true
-
 WORKDIR /workspace
+
+# -----------------------------
+# Install core system + modern tools
+# -----------------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip python3-venv curl git \
+    wget unzip tmux zsh nano vim \
+    netcat-openbsd socat nmap ffuf sqlmap hashcat john \
+    binwalk exiftool file ltrace strace gdb rizin \
+    ripgrep bat netexec smbclient \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# -----------------------------
+RUN git clone https://github.com/pwndbg/pwndbg /opt/pwndbg && \
+    cd /opt/pwndbg && ./setup.sh
+
+# -----------------------------
+# Optional: decompress rockyou wordlist
+# -----------------------------
+RUN [ -f /usr/share/wordlists/rockyou.txt.gz ] && gzip -d /usr/share/wordlists/rockyou.txt.gz || true
+
+# -----------------------------
+# Default shell
+# -----------------------------
 CMD ["/bin/zsh"]
